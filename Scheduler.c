@@ -55,13 +55,27 @@ bool isEmpty(){
 	return End == NULL;
 }
 void PrintList(){
-	if (isEmpty() == 0){
+	if (isEmpty()){
 
 	}
 }
 
 struct node* CreateList(){
-	retunr
+	//we need to read the text file
+	return End;
+}
+
+struct node* RemoveCurrent(struct node* Current){
+	if(isEmpty())
+		return NULL;
+	else{
+		//remove node that current is pointing to
+	}
+}
+
+struct node* ScanList(struct node* End){
+	//initiate scanning process from the end node
+	return End;
 }
 
 
