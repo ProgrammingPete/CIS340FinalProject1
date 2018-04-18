@@ -43,14 +43,20 @@ struct node* RemoveCurrent(struct node*);
 bool isEmpty();
 void PrintList();
 
-struct node* End = NULL;
+struct node * End = NULL;
 struct node * Current = NULL;
+struct node * prev = NULL;
 
 int main(){
 
 	printf("Hello World");
 	CreateList();
 
+	while(!isEmpty()){
+		PrintList();
+		ScanList();
+		sleep(1);
+	}
 
 }
 
@@ -60,12 +66,14 @@ bool isEmpty(){
 }
 void PrintList(){
 	struct node *temp = End;
+	printf("\n[");
 	if (!isEmpty()){
-		while(temp->next != temp){
+		while(temp->next != End){
 			printf("(%d,%d)", temp->ProcessID,temp->ExecTime);
 			temp=temp->next;
 		}
 	}
+	printf("]");
 }
 
 void Add(int exectime, int processID){
@@ -91,7 +99,7 @@ struct node* CreateList(){
 	FILE * file;
 	//buffer
 	char buff[100];
-	int i, exec, proc;
+	int i = 0, exec, proc;
 	file = fopen("test1.txt", "r");
 
 	//read into buffer
@@ -101,32 +109,56 @@ struct node* CreateList(){
 	//allocate memory
 
 	//read file
-	while(buff != 0){
+	while(buff[i] != 0){
 		if(buff[i] == 'P'){
 			//converts to int
-			proc = buff[i+4] + '0';
-			exec = buff[i+6] + '0';
+			proc = buff[i+4] - '0';
+			exec = buff[i+6] - '0';
 			Add(exec,proc);
 		}
+		i++;
 	}
 
 	return End;
 
 }
+struct node* ScanList(){
+	//initiate scanning process from the end node
+	// decrease exectime by every call of function
+	prev = Current;
+	Current = Current->next;
+	Current->ExecTime = Current->ExecTime - 1;
 
-struct node* RemoveCurrent(struct node* Current){
+	if(Current->ExecTime == 1)
+		RemoveCurrent(Current);
+
+	return Current;
+}
+
+struct node* RemoveCurrent(struct node* current){
+
+
+	//reference to removedLink
+	struct node *removedLink = current;
 	if(isEmpty())
 		return NULL;
-	else{
-		//remove node that current is pointing to
+	else if(current->next == current){
+		//this is the last node in the linked list
+		current = NULL;
+		return removedLink;
+	}else{
+		prev->next = current->next;
+		current = NULL;
+		current->next = NULL;
+		free(current);
+
+		return removedLink;
 	}
-	return End;
+	return removedLink;
+
 }
 
-struct node* ScanList(struct node* End){
-	//initiate scanning process from the end node
-	return End;
-}
+
 
 
 
