@@ -32,7 +32,7 @@ void Add(int, int);
 //to be removed from the list. Receives the End pointer to obtain the address
 // of the node first node and initiate the scanning process. It removes the
 //address of the node that should be removed by making it null.
-struct node* ScanList(struct node*);
+struct node* ScanList();
 
 //removes the process that current is pointing to when the process execution time is
 //done.Receives current node pointer. USed by ScanList and returns the reference of
