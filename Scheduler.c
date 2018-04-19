@@ -32,7 +32,7 @@ void Add(int, int);
 //to be removed from the list. Receives the End pointer to obtain the address
 // of the node first node and initiate the scanning process. It removes the
 //address of the node that should be removed by making it null.
-struct node* ScanList();
+struct node* ScanList(struct node*);
 
 //removes the process that current is pointing to when the process execution time is
 //done.Receives current node pointer. USed by ScanList and returns the reference of
@@ -52,11 +52,9 @@ int main(){
 	printf("Hello World");
 	CreateList();
 
-	while(!isEmpty()){
-		PrintList();
-		ScanList();
-		sleep(1);
-	}
+	
+	ScanList(End);
+	
 
 }
 
@@ -65,10 +63,10 @@ bool isEmpty(){
 	return End == NULL;
 }
 void PrintList(){
-	struct node *temp = End;
+	struct node *temp = Current;
 	printf("\n[");
 	if (!isEmpty()){
-		while(temp->next != End){
+		while(temp->next != Current){
 			printf("(%d,%d)", temp->ProcessID,temp->ExecTime);
 			temp=temp->next;
 		}
@@ -122,17 +120,24 @@ struct node* CreateList(){
 	return End;
 
 }
-struct node* ScanList(){
+struct node* ScanList(struct node* end){
 	//initiate scanning process from the end node
 	// decrease exectime by every call of function
-	prev = Current;
-	Current = Current->next;
-	Current->ExecTime = Current->ExecTime - 1;
 
+	Current = end;
+	PrintList();
+	while(!isEmpty()){
+	Current->ExecTime = Current->ExecTime - 1;
 	if(Current->ExecTime == 1)
 		RemoveCurrent(Current);
+	else
+		Current=Current->next;
+	PrintList();
+	sleep(1);
+	}
+	
 
-	return Current;
+	return end;
 }
 
 struct node* RemoveCurrent(struct node* current){
@@ -140,6 +145,9 @@ struct node* RemoveCurrent(struct node* current){
 
 	//reference to removedLink
 	struct node *removedLink = current;
+	Current = Current->next;
+	
+
 	if(isEmpty())
 		return NULL;
 	else if(current->next == current){
@@ -147,14 +155,21 @@ struct node* RemoveCurrent(struct node* current){
 		current = NULL;
 		return removedLink;
 	}else{
-		prev->next = current->next;
-		current = NULL;
+		//find previous node
+		struct node* prev = End;
+		while(prev->next != current)
+			prev = prev->next;
+		prev=current->next;
+		if(current = End)
+			End = prev;
 		current->next = NULL;
+		current = NULL;		
 		free(current);
 
 		return removedLink;
 	}
-	return removedLink;
+
+	return NULL;
 
 }
 
