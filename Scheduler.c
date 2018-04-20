@@ -159,9 +159,12 @@ struct node* RemoveCurrent(struct node* current){
 		struct node* prev = End;
 		while(prev->next != current)
 			prev = prev->next;
-		prev=current->next;
-		if(current = End)
+			
+		prev->next=current->next;
+		//if this is the last node then we have to move the end pointer to the node before
+		if(current == End)
 			End = prev;
+		//this deletes the node
 		current->next = NULL;
 		current = NULL;		
 		free(current);
