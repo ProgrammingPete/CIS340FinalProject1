@@ -49,10 +49,11 @@ struct node * prev = NULL;
 
 int main(){
 
+
 	printf("Hello World");
 	CreateList();
 
-	
+	sleep(2);
 	ScanList(End);
 	
 
@@ -60,33 +61,37 @@ int main(){
 
 bool isEmpty(){
 
-	return End == NULL;
+	return (End == NULL);
 }
 void PrintList(){
-	struct node *temp = Current;
+	struct node *temp = End;
 	printf("\n[");
-	if (!isEmpty()){
-		while(temp->next != Current){
+	//if (isEmpty() == false){
+		/*while(temp->next != Current){
 			printf("(%d,%d)", temp->ProcessID,temp->ExecTime);
 			temp=temp->next;
-		}
-	}
+		}*/
+		do{
+			printf("(%d,%d)", temp->ProcessID,temp->ExecTime);
+			temp=temp->next;
+		}while(temp->next != End);
+		printf("(%d,%d)", temp->ProcessID,temp->ExecTime);
+	//}
 	printf("]");
 }
 
 void Add(int exectime, int processID){
-	if(isEmpty()){
-		End = (struct node*)malloc(sizeof(struct node));
-		Current = (struct node*)malloc(sizeof(struct node));
-		End->ExecTime = exectime;
-		End->ProcessID = processID;
-		End->next = End;
-		Current = End;
-	}else{
 
-		struct node *temp = (struct node*)malloc(sizeof(struct node));
-		temp->ExecTime = exectime;
-		temp->ProcessID = processID;
+	struct node *temp = (struct node*)malloc(sizeof(struct node));
+	temp->ProcessID = processID;
+	temp->ExecTime= exectime;
+
+	if(isEmpty()){
+		End = temp;
+		Current = End;
+		End->next = End;
+		Current = temp;
+	}else{
 		temp->next = End->next;
 		End->next = temp;
 		End = temp;
@@ -104,10 +109,8 @@ struct node* CreateList(){
 	fread(buff,1, 100,file);
 	fclose(file);
 
-	//allocate memory
-
 	//read file
-	while(buff[i] != 0){
+	while(buff[i] != '\0'){
 		if(buff[i] == 'P'){
 			//converts to int
 			proc = buff[i+4] - '0';
@@ -124,14 +127,15 @@ struct node* ScanList(struct node* end){
 	//initiate scanning process from the end node
 	// decrease exectime by every call of function
 
-	Current = end;
 	PrintList();
-	while(!isEmpty()){
+	while(1){
 	Current->ExecTime = Current->ExecTime - 1;
 	if(Current->ExecTime == 1)
 		RemoveCurrent(Current);
 	else
 		Current=Current->next;
+	if(isEmpty())
+		exit(1);
 	PrintList();
 	sleep(1);
 	}
@@ -148,25 +152,22 @@ struct node* RemoveCurrent(struct node* current){
 	Current = Current->next;
 	
 
-	if(isEmpty())
-		return NULL;
-	else if(current->next == current){
-		//this is the last node in the linked list
-		current = NULL;
+	if(End->next == End){
+		End = NULL;
 		return removedLink;
-	}else{
+	}
+	else{
 		//find previous node
 		struct node* prev = End;
 		while(prev->next != current)
 			prev = prev->next;
 			
 		prev->next=current->next;
-		//if this is the last node then we have to move the end pointer to the node before
+		//moves the next
 		if(current == End)
-			End = prev;
+			End = End->next;
+
 		//this deletes the node
-		current->next = NULL;
-		current = NULL;		
 		free(current);
 
 		return removedLink;
