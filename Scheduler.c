@@ -45,12 +45,11 @@ void PrintList();
 
 struct node * End = NULL;
 struct node * Current = NULL;
-struct node * prev = NULL;
 
 int main(){
 
 
-	printf("Hello World");
+	printf("%d", sizeof(struct node));
 	CreateList();
 
 	sleep(2);
@@ -71,11 +70,12 @@ void PrintList(){
 			printf("(%d,%d)", temp->ProcessID,temp->ExecTime);
 			temp=temp->next;
 		}*/
-		do{
+		do{	
 			printf("(%d,%d)", temp->ProcessID,temp->ExecTime);
 			temp=temp->next;
-		}while(temp->next != End);
-		printf("(%d,%d)", temp->ProcessID,temp->ExecTime);
+		}while(temp != End);
+		
+		
 	//}
 	printf("]");
 }
@@ -134,21 +134,25 @@ struct node* ScanList(struct node* end){
 		RemoveCurrent(Current);
 	else
 		Current=Current->next;
-	if(isEmpty())
+	if(isEmpty()){
+		sleep(5);
 		exit(1);
+	}
+		
 	PrintList();
 	sleep(1);
+	
 	}
 	
-
+	sleep(5);
 	return end;
 }
 
-struct node* RemoveCurrent(struct node* current){
+struct node* RemoveCurrent(struct node* target){
 
 
 	//reference to removedLink
-	struct node *removedLink = current;
+	struct node *removedLink = target;
 	Current = Current->next;
 	
 
@@ -159,16 +163,17 @@ struct node* RemoveCurrent(struct node* current){
 	else{
 		//find previous node
 		struct node* prev = End;
-		while(prev->next != current)
+		while(prev->next != target)
 			prev = prev->next;
 			
-		prev->next=current->next;
+		prev->next=target->next;
 		//moves the next
-		if(current == End)
+		if(target == End)
 			End = End->next;
 
 		//this deletes the node
-		free(current);
+		free(target);
+		
 
 		return removedLink;
 	}
