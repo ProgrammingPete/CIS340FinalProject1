@@ -49,7 +49,7 @@ struct node * Current = NULL;
 int main(){
 
 
-	printf("%d", sizeof(struct node));
+	//printf("%d", sizeof(struct node));
 	CreateList();
 
 	sleep(2);
@@ -135,16 +135,16 @@ struct node* ScanList(struct node* end){
 	else
 		Current=Current->next;
 	if(isEmpty()){
-		sleep(5);
+		sleep(3);
 		exit(1);
 	}
-		
-	PrintList();
 	sleep(1);
+	PrintList();
 	
+
 	}
 	
-	sleep(5);
+	//sleep(5);
 	return end;
 }
 
